@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { db } from "../models/db";
 import { Session } from "../models/Session";
 import { Homework } from "../models/Homework";
-import { SubjectView } from "./SubjectView";
 
 const Card = styled.div`
 	padding: 20px;
@@ -39,11 +38,11 @@ interface Props {
 export function SessionView({ session }: Props) {
 	const homework = useLiveQuery(() =>
 		db.homeworkList.get(session.homeworkId)
-	) as Homework;
+	);
 
 	return (
 		<Card className={"row " + (session.done ? "done" : "")}>
-			<SubjectView homework={homework} />
+			<Subject>{homework?.subject}</Subject>
 			<Heading>{homework?.title}</Heading>
 			<Deadline>{session.time}</Deadline>
 			<Type></Type>

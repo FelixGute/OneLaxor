@@ -4,7 +4,7 @@ export async function populate() {
 	const homeworkId = await db.homeworkList.add({
 		title: "Derivatans funktion",
 		deadline: "",
-		subject: 2,
+		subject: "Svenska",
 	});
 	await db.sessionList.bulkAdd([
 		{
