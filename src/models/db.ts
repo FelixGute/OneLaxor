@@ -2,15 +2,18 @@ import Dexie, { Table } from "dexie";
 import { populate } from "./populate";
 import { Homework } from "./Homework";
 import { Session } from "./Session";
+import { Subject } from "./Subject";
 
 export class HomeworkDB extends Dexie {
 	homeworkList!: Table<Homework, number>;
 	sessionList!: Table<Session, number>;
+	subjectList!: Table<Subject, number>;
 	constructor() {
 		super("HomeworkDB");
 		this.version(1).stores({
-			homeworkList: "++id, subject",
+			homeworkList: "++id, subjectId",
 			sessionList: "++id, homeworkId, time, done",
+			subjectList: "++id",
 		});
 	}
 
