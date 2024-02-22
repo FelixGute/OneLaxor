@@ -1,10 +1,11 @@
 import React from "react";
 import Homework from "../components/Homework";
+import EditHomework from "../components/EditHomework";
 import { Link, useParams } from "react-router-dom";
 
-export interface EditProps {}
+export interface AddProps {}
 
-const Edit: React.FunctionComponent<EditProps> = () => {
+const Add: React.FunctionComponent<AddProps> = () => {
 	const params = useParams();
 
 	const id = params.id as unknown as number;
@@ -13,11 +14,12 @@ const Edit: React.FunctionComponent<EditProps> = () => {
 		<>
 			<header className="App-header"></header>
 			<main>
-				<Link to="/">Avbryt</Link>
+				<Link to="/">Tillbaka</Link>
+				<EditHomework />
 				{/* <Homework work={homeworks[id]} /> */}
 			</main>
 		</>
 	);
 };
 
-export default Edit;
+export default Add;

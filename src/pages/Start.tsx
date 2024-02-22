@@ -5,10 +5,10 @@ import { SessionListView } from "../components/SessionListView";
 import styled from "styled-components";
 
 const AddButton = styled(Link)`
-	background: var(--primary-500);
-	color: white;
+	background: var(--primary--500);
+	color: var(--primary--50);
 	text-decoration: none;
-	height: 48px;
+	padding: 10px 20px;
 	border-radius: 20px;
 	font-size: 2rem;
 	text-align: center;
