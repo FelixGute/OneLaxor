@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import styled from "styled-components";
 import { db } from "../models/db";
@@ -36,38 +36,100 @@ interface Props {
 	session: Session;
 }
 
+// // Define your types (adjust as needed)
+// type Homework = {
+// 	id: number;
+// 	// Other properties...
+// };
+
+// type Subject = {
+// 	id: number;
+// 	// Other properties...
+// };
+
+// Define a default homework object
+const defaultHomework: Homework = {
+	id: 1,
+	title: "",
+	deadline: "",
+	subjectId: 0,
+};
+
+// const createDefaultHomework = {
+// 	const homework: defaultHomework = {}
+// }
+
 export function SessionView({ session }: Props) {
-	const homeworkObject = useLiveQuery(() =>
-		db.transaction(
-			"r",
-			db.homeworkList,
-			db.sessionList,
-			db.subjectList,
-			async () => {
-				try {
-					const homework = await db.homeworkList.get(
-						session.homeworkId
-					);
-					const subjectID = homework?.subjectId || 0;
-					const subject = await db.subjectList.get(subjectID);
-					return [homework, subject];
-				} catch (e) {
-					console.log(e);
+	console.log(session);
+
+	const [homeworkData, setHomeworkData] = useState<{
+		homework: Homework | null;
+		subject: Subject | null;
+	}>();
+
+	useEffect(() => {
+		fetchHomeworkAndSubject().then((data) => setHomeworkData(data));
+	}, []);
+
+	const fetchHomeworkAndSubject = async (): Promise<{
+		homework: Homework | null;
+		subject: Subject | null;
+	}> => {
+		try {
+			const homework = await db.homeworkList.get(session.homeworkId);
+			if (homework) {
+				const subjectID = homework?.subjectId || 1;
+				const subject = await db.subjectList.get(subjectID);
+				if (subject) {
+					return { homework, subject };
+				} else {
+					return { homework: null, subject: null };
 				}
+			} else {
+				return { homework: null, subject: null };
 			}
-		)
-	);
+		} catch (error) {
+			console.error("Error fetching data:", error);
+			return { homework: null, subject: null };
+		}
+	};
 
-	console.log("Homework Object:");
-	console.log(homeworkObject);
+	// const homeworkObject = useLiveQuery(() =>
+	// 	db.transaction(
+	// 		"r",
+	// 		db.homeworkList,
+	// 		db.sessionList,
+	// 		db.subjectList,
+	// 		async () => {
+	// 			try {
+	// 				const homework = await db.homeworkList
+	// 					.get(session.homeworkId)
+	// 					.then((homework) => {
+	// 						const subjectID = homework?.subjectId || 1;
+	// 						const subject = await db.subjectList.get(subjectID);
+	// 					});
+	// 				// const subjectID = homework?.subjectId || 1;
+	// 				// const subject = await db.subjectList.get(subjectID);
+	// 				// console.log(homework);
+	// 				// console.log(subject);
+	// 				// return [homework, subject];
+	// 			} catch (e) {
+	// 				console.log(e);
+	// 			}
+	// 		}
+	// 	)
+	// );
 
-	const homework = homeworkObject[0];
-	const subject = homeworkObject[1];
+	// console.log("Homework Object:");
+	// console.log(homeworkObject);
+
+	// const homework = homeworkObject[0];
+	// const subject = homeworkObject[1];
 
 	return (
 		<Card className={"row " + (session.done ? "done" : "")}>
-			<SubjectSpan>{subject.title}</SubjectSpan>
-			<Heading>{homework?.title}</Heading>
+			<SubjectSpan>{homeworkData?.subject?.title}</SubjectSpan>
+			<Heading>{homeworkData?.homework?.title}</Heading>
 			<Deadline>{session.time}</Deadline>
 			<Type></Type>
 
