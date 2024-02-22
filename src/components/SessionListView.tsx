@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Homework } from "../models/Homework";
 import { db } from "../models/db";
 import { SessionView } from "./SessionView";
 
@@ -15,10 +14,10 @@ export function SessionListView({}: Props) {
 	if (!sessions) return null;
 
 	return (
-		<div className="box">
+		<>
 			{sessions.map((item) => (
 				<SessionView key={item.id} session={item} />
 			))}
-		</div>
+		</>
 	);
 }

@@ -13,7 +13,7 @@ const Edit: React.FunctionComponent<EditProps> = () => {
 		<>
 			<header className="App-header"></header>
 			<main>
-				<Link to="/">Tillbaka</Link>
+				<Link to="/">Avbryt</Link>
 				{/* <Homework work={homeworks[id]} /> */}
 			</main>
 		</>

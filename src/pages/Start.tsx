@@ -1,63 +1,29 @@
 import React from "react";
-import Homework from "./../components/Homework";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { ResetDatabaseButton } from "../components/ResetDatabaseButton";
+import { SessionListView } from "../components/SessionListView";
+import styled from "styled-components";
+
+const AddButton = styled(Link)`
+	background: var(--primary-500);
+	color: white;
+	text-decoration: none;
+	height: 48px;
+	border-radius: 20px;
+	font-size: 2rem;
+	text-align: center;
+`;
 
 export interface StartProps {}
 
 const Start: React.FunctionComponent<StartProps> = () => {
-	function createHomework(
-		title: string,
-		deadline: string,
-		subject: string,
-		type: string
-	) {
-		return {
-			title: title,
-			deadline: deadline,
-			subject: subject,
-			type: type,
-		};
-	}
-
-	const homeworks = [];
-
-	homeworks.push(
-		createHomework(
-			"Skolaktivitets Affischdesign",
-			"2023-12-15",
-			"Digitalt skapande 1",
-			"Inlämning"
-		)
-	);
-	homeworks.push(
-		createHomework(
-			"Teknikens Påverkan",
-			"2023-12-10",
-			"Svenska 1",
-			"Inlämning"
-		)
-	);
-	homeworks.push(
-		createHomework("Derivatorer i Fokus", "2023-12-08", "Matematik", "Prov")
-	);
-	homeworks.push(
-		createHomework(
-			"Kvantfysikens mysterium",
-			"2023-12-17",
-			"Svenska 1",
-			"Prov"
-		)
-	);
-
 	return (
 		<>
-			{homeworks.map((homework, key) => {
-				return (
-					<Link to={"/edit/" + key}>
-						<Homework work={homework} />
-					</Link>
-				);
-			})}
+			<header className="App-header"></header>
+			<main>
+				<SessionListView />
+				<AddButton to="/add">+ Lägg till uppgift</AddButton>
+			</main>
 		</>
 	);
 };

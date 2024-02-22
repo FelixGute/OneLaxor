@@ -1,67 +1,54 @@
 import React, { useState, useEffect } from "react";
-import { useLiveQuery } from "dexie-react-hooks";
 import styled from "styled-components";
 import { db } from "../models/db";
 import { Session } from "../models/Session";
 import { Homework } from "../models/Homework";
 import { Subject } from "../models/Subject";
+import { SubjectView } from "./SubjectView";
 
 const Card = styled.div`
 	padding: 20px;
 	display: flex;
+	justify-content: space-between;
+	gap: 20px;
+`;
+const Check = styled.div`
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	gap: 10px;
+`;
+const Info = styled.div`
+	display: flex;
 	flex-direction: column;
-	justify-content: flex-start;
+	gap: 10px;
 `;
 const Heading = styled.h2`
 	font-size: 1.5em;
-	color: #bf4f74;
+	color: var(--primary-500);
 	margin: 0;
 `;
 const Type = styled.p`
 	margin: 0;
 `;
+const Checkmark = styled.input``;
 const Deadline = styled.p`
 	margin: 0;
-`;
-const SubjectSpan = styled.span`
-	font-size: 0.75em;
-	background: green;
-	border-radius: 20px;
-	padding: 10px 20px;
-	margin: 0;
-	color: lightgreen;
 `;
 
 interface Props {
 	session: Session;
 }
 
-// // Define your types (adjust as needed)
-// type Homework = {
-// 	id: number;
-// 	// Other properties...
+// // Define a default homework object
+// const defaultHomework: Homework = {
+// 	id: 1,
+// 	title: "",
+// 	deadline: "",
+// 	subjectId: 0,
 // };
-
-// type Subject = {
-// 	id: number;
-// 	// Other properties...
-// };
-
-// Define a default homework object
-const defaultHomework: Homework = {
-	id: 1,
-	title: "",
-	deadline: "",
-	subjectId: 0,
-};
-
-// const createDefaultHomework = {
-// 	const homework: defaultHomework = {}
-// }
 
 export function SessionView({ session }: Props) {
-	console.log(session);
-
 	const [homeworkData, setHomeworkData] = useState<{
 		homework: Homework | null;
 		subject: Subject | null;
@@ -94,47 +81,10 @@ export function SessionView({ session }: Props) {
 		}
 	};
 
-	// const homeworkObject = useLiveQuery(() =>
-	// 	db.transaction(
-	// 		"r",
-	// 		db.homeworkList,
-	// 		db.sessionList,
-	// 		db.subjectList,
-	// 		async () => {
-	// 			try {
-	// 				const homework = await db.homeworkList
-	// 					.get(session.homeworkId)
-	// 					.then((homework) => {
-	// 						const subjectID = homework?.subjectId || 1;
-	// 						const subject = await db.subjectList.get(subjectID);
-	// 					});
-	// 				// const subjectID = homework?.subjectId || 1;
-	// 				// const subject = await db.subjectList.get(subjectID);
-	// 				// console.log(homework);
-	// 				// console.log(subject);
-	// 				// return [homework, subject];
-	// 			} catch (e) {
-	// 				console.log(e);
-	// 			}
-	// 		}
-	// 	)
-	// );
-
-	// console.log("Homework Object:");
-	// console.log(homeworkObject);
-
-	// const homework = homeworkObject[0];
-	// const subject = homeworkObject[1];
-
 	return (
-		<Card className={"row " + (session.done ? "done" : "")}>
-			<SubjectSpan>{homeworkData?.subject?.title}</SubjectSpan>
-			<Heading>{homeworkData?.homework?.title}</Heading>
-			<Deadline>{session.time}</Deadline>
-			<Type></Type>
-
-			<div className="narrow">
-				<input
+		<Card>
+			<Check>
+				<Checkmark
 					type="checkbox"
 					checked={!!session.done}
 					onChange={(ev) =>
@@ -143,14 +93,27 @@ export function SessionView({ session }: Props) {
 						})
 					}
 				/>
-			</div>
-			<div className="todo-session-trash">
+				<SubjectView
+					subject={
+						homeworkData?.subject || {
+							title: "Saknas",
+							color: "red",
+						}
+					}
+				/>
+			</Check>
+			<Info>
+				<Heading>{homeworkData?.homework?.title}</Heading>
+				<Deadline>{session.time}</Deadline>
+				<Type></Type>
+			</Info>
+			{/* <div className="todo-session-trash">
 				<button
 					onClick={() => db.sessionList.delete(session.id as number)}
 					title="Delete item">
 					Ta bort
 				</button>
-			</div>
+			</div> */}
 		</Card>
 	);
 }
