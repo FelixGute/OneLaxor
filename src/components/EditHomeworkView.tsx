@@ -37,7 +37,27 @@ const SubjectOption = styled.option<iOption>`
 	color: color-mix(in srgb, ${(props) => props.color} 10%, white);
 `;
 
-export default function EditHomework() {
+interface Props {
+	homeworkId: number;
+}
+
+export default function EditHomeworkView({ homeworkId }: Props) {
+	// Get info from db
+	// Populate fields
+	// UpdateHomework
+
+	// Nothing happens until pushing a Save-button
+	// Need a way to track changes on sessions
+	// Show old sessions?
+
+	// Should there be an intermediate view for a single homework?
+	// And then an edit-button for the editing view
+
+	// Also need a delete-button for removing the entire homework and sessions
+
+	// Should sessions stay? Only Done ones, for statistics?
+	// Issue then becomes how to sort and view them, since they then lack a link to Homework
+
 	const [subjectData, setSubjectData] = useState<Subject[]>([]);
 	const [sessions, setSessions] = useState<SessionData[]>([]);
 	const [selectedDate, setSelectedDate] = useState<Date>(new Date());

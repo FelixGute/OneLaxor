@@ -37,7 +37,7 @@ const SubjectOption = styled.option<iOption>`
 	color: color-mix(in srgb, ${(props) => props.color} 10%, white);
 `;
 
-export default function EditHomework() {
+export default function AddHomeworkView() {
 	const [subjectData, setSubjectData] = useState<Subject[]>([]);
 	const [sessions, setSessions] = useState<SessionData[]>([]);
 	const [selectedDate, setSelectedDate] = useState<Date>(new Date());
