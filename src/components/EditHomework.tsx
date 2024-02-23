@@ -99,18 +99,37 @@ export default function EditHomework() {
 		setSessions(updatedItems);
 	};
 
+	const homeworkNamePlaceholder: string[] = [
+		"Klimatessä",
+		"Differentialekvationslösning",
+		"Romananalys",
+		"Webbapplikationsbygge",
+		"Biologiskt experiment",
+		"Historisk händelsepresentation",
+		"Etiska dilemman",
+		"Konstnärlig installation",
+		"Ekonomibegrepp",
+		"Kulturforskning",
+	];
+
+	const randomPlaceholder: string =
+		homeworkNamePlaceholder[
+			Math.floor(Math.random() * homeworkNamePlaceholder.length)
+		];
+
 	return (
 		/* "handleSubmit" will validate your inputs before invoking "onSubmit" */
 		<>
-			<h1>Lägg till ny läxa</h1>
+			<h1>Lägg till ny uppgift</h1>
 			<StyledForm onSubmit={handleSubmit(onSubmit)}>
-				{/* register your input into the hook by invoking the "register" function */}
 				<label>
-					<span>Läxans namn</span>
-					<input placeholder="test" {...register("homework")} />
+					<span>Uppgiftens namn</span>
+					<input
+						placeholder={randomPlaceholder}
+						{...register("homework", { required: true })}
+					/>
 				</label>
-
-				{/* include validation with required or other standard HTML validation rules */}
+				{errors.homework && <span>Uppgiften behöver ett namn!</span>}
 				<label>
 					<span>Ämne</span>
 					<select id="subject" {...register("subject")}>
