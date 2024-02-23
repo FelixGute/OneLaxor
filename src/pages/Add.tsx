@@ -1,6 +1,5 @@
 import React from "react";
-import Homework from "../components/Homework";
-import EditHomework from "../components/EditHomework";
+import AddHomeworkView from "../components/AddHomeworkView";
 import { Link, useParams } from "react-router-dom";
 
 export interface AddProps {}
@@ -15,7 +14,7 @@ const Add: React.FunctionComponent<AddProps> = () => {
 			<header className="App-header"></header>
 			<main>
 				<Link to="/">Tillbaka</Link>
-				<EditHomework />
+				<AddHomeworkView />
 				{/* <Homework work={homeworks[id]} /> */}
 			</main>
 		</>
