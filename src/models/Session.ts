@@ -1,6 +1,6 @@
 export interface Session {
 	id?: number;
 	homeworkId: number;
-	time: string;
+	time: Date;
 	done: number;
 }

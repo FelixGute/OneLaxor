@@ -104,7 +104,7 @@ export function SessionView({ session }: Props) {
 			</Check>
 			<Info>
 				<Heading>{homeworkData?.homework?.title}</Heading>
-				<Deadline>{session.time}</Deadline>
+				<Deadline>{session.time.toISOString().split("T")[0]}</Deadline>
 				<Type></Type>
 			</Info>
 			{/* <div className="todo-session-trash">
