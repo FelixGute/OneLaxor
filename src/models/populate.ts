@@ -21,22 +21,22 @@ export async function populate() {
 	await db.sessionList.bulkAdd([
 		{
 			homeworkId: 1,
-			time: "2024-02-14",
+			time: new Date("2024-02-22"),
 			done: 0,
 		},
 		{
 			homeworkId: 1,
-			time: "2024-02-15",
+			time: new Date("2024-02-15"),
 			done: 0,
 		},
 		{
 			homeworkId: 2,
-			time: "2024-02-15",
+			time: new Date("2024-02-15"),
 			done: 0,
 		},
 		{
 			homeworkId: 3,
-			time: "2024-02-16",
+			time: new Date("2024-02-16"),
 			done: 1,
 		},
 	]);

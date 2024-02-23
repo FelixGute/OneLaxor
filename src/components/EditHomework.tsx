@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { db } from "../models/db";
 import { useForm, SubmitHandler } from "react-hook-form";
 import styled from "styled-components";
@@ -41,6 +42,8 @@ export default function EditHomework() {
 	const [sessions, setSessions] = useState<SessionData[]>([]);
 	const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
+	const navigate = useNavigate();
+
 	// Handle changes when the user selects a new date
 	const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const newDate = new Date(e.target.value);
@@ -79,8 +82,10 @@ export default function EditHomework() {
 	const onSubmit: SubmitHandler<HomeworkInputs> = (data) => {
 		console.log(data);
 		console.log(sessions);
-		AddHomework({ homeworkData: data, sessionData: sessions });
 		// Update database
+		AddHomework({ homeworkData: data, sessionData: sessions }).then(() =>
+			navigate("/")
+		);
 		// Go back to start
 	};
 
@@ -109,9 +114,10 @@ export default function EditHomework() {
 				<label>
 					<span>Ämne</span>
 					<select id="subject" {...register("subject")}>
-						{subjectData?.map((subject) => {
+						{subjectData?.map((subject, key) => {
 							return (
 								<SubjectOption
+									key={key}
 									color={subject.color}
 									value={subject.id}>
 									{subject.title}
@@ -130,7 +136,11 @@ export default function EditHomework() {
 							onChange={handleDateChange}
 						/>
 					</label>
-					<button onClick={() => handleAddSession(selectedDate)}>
+					<button
+						onClick={(e) => {
+							e.preventDefault();
+							handleAddSession(selectedDate);
+						}}>
 						Lägg till tillfälle
 					</button>
 				</div>

@@ -28,7 +28,7 @@ const Subject = styled.span`
 `;
 
 export interface IHomeworkProps {
-	work: { title: string; deadline: string; subject: string; type: string };
+	work: { title: string; deadline: string; subject: number; type: string };
 }
 
 const Homework = ({ work }: IHomeworkProps) => {
