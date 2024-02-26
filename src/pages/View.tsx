@@ -1,11 +1,11 @@
 import React from "react";
 import Homework from "../components/Homework";
-import EditHomeworkView from "../components/EditHomeworkView";
+import HomeworkView from "../components/HomeworkView";
 import { Link, useParams } from "react-router-dom";
 
-export interface EditProps {}
+export interface ViewProps {}
 
-const Edit: React.FunctionComponent<EditProps> = () => {
+const View: React.FunctionComponent<ViewProps> = () => {
 	const params = useParams();
 
 	const id = params.id as unknown as number;
@@ -15,10 +15,10 @@ const Edit: React.FunctionComponent<EditProps> = () => {
 			<header className="App-header"></header>
 			<main>
 				<Link to="/">Tillbaka</Link>
-				<EditHomeworkView homeworkId={id} />
+				<HomeworkView homeworkId={id} />
 			</main>
 		</>
 	);
 };
 
-export default Edit;
+export default View;
