@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../models/db";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -81,41 +81,33 @@ export default function HomeworkView({ homeworkId }: Props) {
 	const [subjectData, setSubjectData] = useState<Subject[]>([]);
 	const [sessions, setSessions] = useState<SessionData[]>([]);
 	const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-
 	const navigate = useNavigate();
-
-	// Handle changes when the user selects a new date
-	const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const newDate = new Date(e.target.value);
-		if (!isNaN(newDate.getTime())) {
-			setSelectedDate(newDate);
-		} else {
-			const newDate = new Date();
-			setSelectedDate(newDate);
-		}
-	};
 
 	useEffect(() => {
 		fetchHomework().then((data) => {
 			setHomeworkData(data);
+			console.log(data);
 			if (
-				homeworkData?.title == "" &&
-				homeworkData.deadline == "" &&
-				homeworkData.subjectId == 0
+				homeworkData?.title === "" &&
+				homeworkData.deadline === "" &&
+				homeworkData.subjectId === 0
 			) {
 				// No matching homework found, go back to start
-				navigate("/");
+				// navigate("/");
 			}
 		});
 		fetchSubject().then((data) => setSubjectData(data));
-	}, []);
+	}, [homeworkId]);
 
 	const fetchHomework = async (): Promise<Homework> => {
 		try {
+			console.log("homeworkID:" + homeworkId);
 			const homework = await db.homeworkList.get(homeworkId);
+			console.log("homework: " + homework);
 			if (homework) {
 				return homework;
 			} else {
+				console.log("No homework found");
 				return { title: "", deadline: "", subjectId: 0 };
 			}
 		} catch (error) {
@@ -138,6 +130,17 @@ export default function HomeworkView({ homeworkId }: Props) {
 		}
 	};
 
+	// Handle changes when the user selects a new date
+	const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const newDate = new Date(e.target.value);
+		if (!isNaN(newDate.getTime())) {
+			setSelectedDate(newDate);
+		} else {
+			const newDate = new Date();
+			setSelectedDate(newDate);
+		}
+	};
+
 	const handleAddSession = (sessionTime: Date) => {
 		const newItem: SessionData = { time: sessionTime };
 		// Also add to database
@@ -153,11 +156,10 @@ export default function HomeworkView({ homeworkId }: Props) {
 	return (
 		<>
 			{/* Div med info om homework */}
-			<h1>Lägg till ny uppgift</h1>
-			{homeworkData?.title}
+			<h2>{homeworkData?.title}</h2>
 			{subjectData
 				.filter((subject) => {
-					return subject.id == homeworkData?.subjectId;
+					return subject.id === homeworkData?.subjectId;
 				})
 				.map((subject) => {
 					return (

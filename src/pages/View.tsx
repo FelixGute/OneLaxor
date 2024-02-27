@@ -5,17 +5,21 @@ import { Link, useParams } from "react-router-dom";
 
 export interface ViewProps {}
 
-const View: React.FunctionComponent<ViewProps> = () => {
-	const params = useParams();
+type HomeworkParams = {
+	id: string;
+};
 
-	const id = params.id as unknown as number;
+const View: React.FunctionComponent<ViewProps> = () => {
+	const { id } = useParams<HomeworkParams>();
+
+	const actualID: number = Number(id);
 
 	return (
 		<>
 			<header className="App-header"></header>
 			<main>
 				<Link to="/">Tillbaka</Link>
-				<HomeworkView homeworkId={id} />
+				<HomeworkView homeworkId={actualID} />
 			</main>
 		</>
 	);
