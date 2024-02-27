@@ -5,12 +5,10 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import styled from "styled-components";
 import { Subject } from "../models/Subject";
 import { Homework } from "../models/Homework";
-import {
-	SessionData,
-	HomeworkUpdateData,
-	HomeworkInputs,
-	UpdateHomework,
-} from "../models/UpdateHomework";
+import { Session } from "../models/Session";
+import { AddSession, DeleteSession } from "../models/UpdateHomework";
+
+// Need to change from SessionData to Session, so it can contain sessionID
 
 /*
 
@@ -48,26 +46,6 @@ export default function HomeworkView({ homeworkId }: Props) {
 	// Populate fields
 	// UpdateHomework
 
-	// Nothing happens until pushing a Save-button?
-	// Need a way to track changes on sessions
-	// Show old sessions?
-
-	// Just do a comparison on old sessions and such?
-	// Remove all sessions, then add sessions back?
-	// Filter for removal (old sessions not in current sessions)
-	// Filter for adding (current sessions not in old sessions)
-	// Only do this for sessions not marked as done
-
-	// Editing doesn't allow for removing done sessions?
-
-	// One main issue at the moment is bringing back sessions that you might have accidentally marked as done.
-	// Do an Archive view where you can unclick Done. That should solve that part.
-
-	// Odd one out is sessions marked as done...
-
-	// Should there be an intermediate view for a single homework?
-	// And then an edit-button for the editing view
-
 	// Also need a delete-button for removing the entire homework and sessions
 
 	// Should sessions stay? Only Done ones, for statistics?
@@ -79,7 +57,7 @@ export default function HomeworkView({ homeworkId }: Props) {
 
 	const [homeworkData, setHomeworkData] = useState<Homework>();
 	const [subjectData, setSubjectData] = useState<Subject[]>([]);
-	const [sessions, setSessions] = useState<SessionData[]>([]);
+	const [sessions, setSessions] = useState<Session[]>([]);
 	const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 	const navigate = useNavigate();
 
@@ -97,7 +75,8 @@ export default function HomeworkView({ homeworkId }: Props) {
 			}
 		});
 		fetchSubject().then((data) => setSubjectData(data));
-	}, [homeworkId]);
+		fetchSession().then((data) => setSessions(data));
+	}, [homeworkId, sessions]);
 
 	const fetchHomework = async (): Promise<Homework> => {
 		try {
@@ -116,6 +95,21 @@ export default function HomeworkView({ homeworkId }: Props) {
 		}
 	};
 
+	const fetchSession = async (): Promise<Session[]> => {
+		try {
+			const session = await db.sessionList
+				.where({ homeworkId: homeworkId })
+				.toArray();
+			if (session) {
+				return session;
+			} else {
+				return [];
+			}
+		} catch (error) {
+			console.error("Error fetching data:", error);
+			return [];
+		}
+	};
 	const fetchSubject = async (): Promise<Subject[]> => {
 		try {
 			const subject = await db.subjectList.toArray();
@@ -140,17 +134,25 @@ export default function HomeworkView({ homeworkId }: Props) {
 			setSelectedDate(newDate);
 		}
 	};
-
 	const handleAddSession = (sessionTime: Date) => {
-		const newItem: SessionData = { time: sessionTime };
-		// Also add to database
-		setSessions([...sessions, newItem]);
+		const newSession: Session = {
+			homeworkId: homeworkId,
+			time: sessionTime,
+			done: 0,
+		};
+		AddSession(newSession).then((sessionId) => {
+			newSession.id = sessionId;
+			setSessions([...sessions, newSession]);
+		});
 	};
 
 	const handleRemoveSession = (sessionId: number) => {
-		const updatedItems = sessions.filter((_, index) => index !== sessionId);
-		// Also remove from database
-		setSessions(updatedItems);
+		DeleteSession(sessionId).then(() => {
+			const updatedItems = sessions.filter(
+				(_, index) => index !== sessionId
+			);
+			setSessions(updatedItems);
+		});
 	};
 
 	return (
@@ -161,9 +163,9 @@ export default function HomeworkView({ homeworkId }: Props) {
 				.filter((subject) => {
 					return subject.id === homeworkData?.subjectId;
 				})
-				.map((subject) => {
+				.map((subject, key) => {
 					return (
-						<SubjectSpan color={subject.color}>
+						<SubjectSpan key={key} color={subject.color}>
 							{subject.title}
 						</SubjectSpan>
 					);
@@ -189,12 +191,17 @@ export default function HomeworkView({ homeworkId }: Props) {
 
 			{sessions != null ? (
 				<ul>
-					{sessions.map((session, key) => {
+					{sessions.map((session) => {
 						return (
-							<li key={key}>
+							<li key={session.id}>
 								{session.time.toISOString().split("T")[0]}
 								<button
-									onClick={() => handleRemoveSession(key)}>
+									onClick={(e) => {
+										e.preventDefault();
+										handleRemoveSession(
+											session.id as number
+										);
+									}}>
 									-
 								</button>
 							</li>

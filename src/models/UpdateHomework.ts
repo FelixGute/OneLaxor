@@ -18,6 +18,15 @@ export interface HomeworkUpdateData {
 	sessionData: SessionData[];
 }
 
+export async function AddSession(session: Session): Promise<number> {
+	return db.sessionList.add(session);
+	// Possible to have multiple sessions with the same date?
+}
+
+export async function DeleteSession(sessionId: number): Promise<void> {
+	return db.sessionList.delete(sessionId);
+}
+
 export async function UpdateHomework(homeworkData: HomeworkUpdateData) {
 	const homeworkId = await db.homeworkList.add({
 		title: homeworkData.homeworkData.homework,
