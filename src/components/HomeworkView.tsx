@@ -71,7 +71,7 @@ export default function HomeworkView({ homeworkId }: Props) {
 				homeworkData.subjectId === 0
 			) {
 				// No matching homework found, go back to start
-				// navigate("/");
+				navigate("/");
 			}
 		});
 		fetchSubject().then((data) => setSubjectData(data));

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import { db } from "../models/db";
 import { Session } from "../models/Session";
 import { Homework } from "../models/Homework";
@@ -39,14 +40,6 @@ const Deadline = styled.p`
 interface Props {
 	session: Session;
 }
-
-// // Define a default homework object
-// const defaultHomework: Homework = {
-// 	id: 1,
-// 	title: "",
-// 	deadline: "",
-// 	subjectId: 0,
-// };
 
 export function SessionView({ session }: Props) {
 	const [homeworkData, setHomeworkData] = useState<{
@@ -103,7 +96,9 @@ export function SessionView({ session }: Props) {
 				/>
 			</Check>
 			<Info>
-				<Heading>{homeworkData?.homework?.title}</Heading>
+				<Link to={"/homework/" + homeworkData?.homework?.id}>
+					<Heading>{homeworkData?.homework?.title}</Heading>
+				</Link>
 				<Deadline>{session.time.toISOString().split("T")[0]}</Deadline>
 				<Type></Type>
 			</Info>
