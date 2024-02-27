@@ -102,13 +102,6 @@ export function SessionView({ session }: Props) {
 				<Deadline>{session.time.toISOString().split("T")[0]}</Deadline>
 				<Type></Type>
 			</Info>
-			{/* <div className="todo-session-trash">
-				<button
-					onClick={() => db.sessionList.delete(session.id as number)}
-					title="Delete item">
-					Ta bort
-				</button>
-			</div> */}
 		</Card>
 	);
 }

@@ -26,6 +26,12 @@ export async function AddSession(session: Session): Promise<number> {
 export async function DeleteSession(sessionId: number): Promise<void> {
 	return db.sessionList.delete(sessionId);
 }
+export async function MarkSessionAsDone(sessionId: number): Promise<number> {
+	return db.sessionList.update(sessionId, { done: 1 });
+}
+export async function MarkSessionAsTodo(sessionId: number): Promise<number> {
+	return db.sessionList.update(sessionId, { done: 0 });
+}
 
 export async function UpdateHomework(homeworkData: HomeworkUpdateData) {
 	const homeworkId = await db.homeworkList.add({
