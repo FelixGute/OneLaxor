@@ -154,6 +154,15 @@ export default function HomeworkView({ homeworkId }: Props) {
 			setSessions(updatedItems);
 		});
 	};
+	const handleDoneSession = (sessionId: number) => {
+		// DeleteSession(sessionId).then(() => {
+		// 	const updatedItems = sessions.filter(
+		// 		(_, index) => index !== sessionId
+		// 	);
+		// 	setSessions(updatedItems);
+		// });
+		// Update session and set to done
+	};
 
 	return (
 		<>
