@@ -26,8 +26,14 @@ export async function AddSession(session: Session): Promise<number> {
 export async function DeleteSession(sessionId: number): Promise<void> {
 	return db.sessionList.delete(sessionId);
 }
+export async function UpdateSession(
+	sessionId: number,
+	isDone: number
+): Promise<number> {
+	return db.sessionList.update(sessionId, { done: isDone });
+}
 export async function MarkSessionAsDone(sessionId: number): Promise<number> {
-	return db.sessionList.update(sessionId, { done: 1 });
+	return UpdateSession(sessionId, 1);
 }
 export async function MarkSessionAsTodo(sessionId: number): Promise<number> {
 	return db.sessionList.update(sessionId, { done: 0 });

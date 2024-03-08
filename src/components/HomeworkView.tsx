@@ -6,7 +6,11 @@ import styled from "styled-components";
 import { Subject } from "../models/Subject";
 import { Homework } from "../models/Homework";
 import { Session } from "../models/Session";
-import { AddSession, DeleteSession } from "../models/UpdateHomework";
+import {
+	AddSession,
+	DeleteSession,
+	UpdateSession,
+} from "../models/UpdateHomework";
 
 // Need to change from SessionData to Session, so it can contain sessionID
 
@@ -154,14 +158,16 @@ export default function HomeworkView({ homeworkId }: Props) {
 			setSessions(updatedItems);
 		});
 	};
-	const handleDoneSession = (sessionId: number) => {
-		// DeleteSession(sessionId).then(() => {
-		// 	const updatedItems = sessions.filter(
-		// 		(_, index) => index !== sessionId
-		// 	);
-		// 	setSessions(updatedItems);
-		// });
-		// Update session and set to done
+	const handleSessionSetDone = (sessionId: number, isDone: number) => {
+		UpdateSession(sessionId, isDone).then(() => {
+			const updatedItems = sessions.map((session) => {
+				if (session.id == sessionId) {
+					session.done = isDone;
+				}
+				return session;
+			});
+			setSessions(updatedItems);
+		});
 	};
 
 	return (
@@ -199,24 +205,67 @@ export default function HomeworkView({ homeworkId }: Props) {
 			</div>
 
 			{sessions != null ? (
-				<ul>
-					{sessions.map((session) => {
-						return (
-							<li key={session.id}>
-								{session.time.toISOString().split("T")[0]}
-								<button
-									onClick={(e) => {
-										e.preventDefault();
-										handleRemoveSession(
-											session.id as number
-										);
-									}}>
-									-
-								</button>
-							</li>
-						);
-					})}
-				</ul>
+				<div>
+					<h2>Kommande</h2>
+					<ul>
+						{sessions
+							.filter((session) => session.done == 0)
+							.map((session) => {
+								return (
+									<li key={session.id}>
+										{
+											session.time
+												.toISOString()
+												.split("T")[0]
+										}
+										<button
+											onClick={(e) => {
+												e.preventDefault();
+												handleRemoveSession(
+													session.id as number
+												);
+											}}>
+											-
+										</button>
+									</li>
+								);
+							})}
+					</ul>
+					<h2>Avklarade</h2>
+					<ul>
+						{sessions
+							.filter((session) => session.done != 0)
+							.map((session) => {
+								return (
+									<li key={session.id}>
+										<button
+											onClick={(e) => {
+												e.preventDefault();
+												handleSessionSetDone(
+													session.id as number,
+													1
+												);
+											}}>
+											{
+												session.time
+													.toISOString()
+													.split("T")[0]
+											}
+										</button>
+										<button
+											onClick={(e) => {
+												e.preventDefault();
+												handleRemoveSession(
+													session.id as number
+												);
+											}}>
+											-
+										</button>
+									</li>
+								);
+							})}
+					</ul>
+				</div>
 			) : (
 				<></>
 			)}
