@@ -80,9 +80,9 @@ export default function HomeworkView({ homeworkId }: Props) {
 		});
 		fetchSubject().then((data) => setSubjectData(data));
 		fetchSession().then((data) => setSessions(data));
-	}, [homeworkId, sessions]);
+	}, []);
 
-	const fetchHomework = async (): Promise<Homework> => {
+	async function fetchHomework(): Promise<Homework> {
 		try {
 			console.log("homeworkID:" + homeworkId);
 			const homework = await db.homeworkList.get(homeworkId);
@@ -97,9 +97,9 @@ export default function HomeworkView({ homeworkId }: Props) {
 			console.error("Error fetching data:", error);
 			return { title: "", deadline: "", subjectId: 0 };
 		}
-	};
+	}
 
-	const fetchSession = async (): Promise<Session[]> => {
+	async function fetchSession(): Promise<Session[]> {
 		try {
 			const session = await db.sessionList
 				.where({ homeworkId: homeworkId })
@@ -113,7 +113,7 @@ export default function HomeworkView({ homeworkId }: Props) {
 			console.error("Error fetching data:", error);
 			return [];
 		}
-	};
+	}
 	const fetchSubject = async (): Promise<Subject[]> => {
 		try {
 			const subject = await db.subjectList.toArray();
@@ -159,9 +159,10 @@ export default function HomeworkView({ homeworkId }: Props) {
 		});
 	};
 	const handleSessionSetDone = (sessionId: number, isDone: number) => {
+		console.log(sessionId + " set to " + isDone);
 		UpdateSession(sessionId, isDone).then(() => {
 			const updatedItems = sessions.map((session) => {
-				if (session.id == sessionId) {
+				if (session.id === sessionId) {
 					session.done = isDone;
 				}
 				return session;
@@ -209,15 +210,24 @@ export default function HomeworkView({ homeworkId }: Props) {
 					<h2>Kommande</h2>
 					<ul>
 						{sessions
-							.filter((session) => session.done == 0)
+							.filter((session) => session.done === 0)
 							.map((session) => {
 								return (
 									<li key={session.id}>
-										{
-											session.time
-												.toISOString()
-												.split("T")[0]
-										}
+										<button
+											onClick={(e) => {
+												e.preventDefault();
+												handleSessionSetDone(
+													session.id as number,
+													1
+												);
+											}}>
+											{
+												session.time
+													.toISOString()
+													.split("T")[0]
+											}
+										</button>
 										<button
 											onClick={(e) => {
 												e.preventDefault();
@@ -234,7 +244,7 @@ export default function HomeworkView({ homeworkId }: Props) {
 					<h2>Avklarade</h2>
 					<ul>
 						{sessions
-							.filter((session) => session.done != 0)
+							.filter((session) => session.done !== 0)
 							.map((session) => {
 								return (
 									<li key={session.id}>
@@ -243,7 +253,7 @@ export default function HomeworkView({ homeworkId }: Props) {
 												e.preventDefault();
 												handleSessionSetDone(
 													session.id as number,
-													1
+													0
 												);
 											}}>
 											{
