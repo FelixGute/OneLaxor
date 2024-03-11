@@ -153,8 +153,9 @@ export default function HomeworkView({ homeworkId }: Props) {
 	const handleRemoveSession = (sessionId: number) => {
 		DeleteSession(sessionId).then(() => {
 			const updatedItems = sessions.filter(
-				(_, index) => index !== sessionId
+				(session) => session.id !== sessionId
 			);
+			console.log(updatedItems);
 			setSessions(updatedItems);
 		});
 	};
@@ -167,6 +168,7 @@ export default function HomeworkView({ homeworkId }: Props) {
 				}
 				return session;
 			});
+			console.log(updatedItems);
 			setSessions(updatedItems);
 		});
 	};
